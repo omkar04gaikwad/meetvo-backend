@@ -23,7 +23,7 @@ class User(Base):
 class Session(Base):
     __tablename__ = "sessions"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     expires_at = Column(DateTime, nullable=False)
     token = Column(String, unique=True, nullable=False)
 

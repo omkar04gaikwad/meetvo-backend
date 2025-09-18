@@ -18,3 +18,9 @@ else:
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
+# Import models *after* Base is declared
+import db.models
+# Create all tables
+Base.metadata.create_all(bind=engine)
