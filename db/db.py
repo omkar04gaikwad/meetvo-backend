@@ -3,16 +3,24 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 
-# Load .env from project root
+# Load env variables
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Create engine
-engine = create_engine(DATABASE_URL, echo=True)
+# Special SQLite settings
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
+    )
+else:
+    engine = create_engine(DATABASE_URL, echo=True)
 
-# Session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base class for models
 Base = declarative_base()
+
+
+# Import models *after* Base is declared
+import db.models
+# Create all tables
+Base.metadata.create_all(bind=engine)
